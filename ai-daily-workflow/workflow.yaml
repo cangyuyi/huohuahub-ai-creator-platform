@@ -1,0 +1,808 @@
+app:
+  description: 每天自动搜集AI新闻，通俗解读并生成四宫格漫画
+  icon: 🤖
+  icon_background: '#FFEAD5'
+  icon_type: emoji
+  mode: workflow
+  name: AI新闻四宫格漫画日报
+  use_icon_as_answer_icon: false
+dependencies:
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: langgenius/google:0.1.6@2888d7379ce1a7a3f71e29506417b4995418ac73d0bb3ede9b49ab10aa475944
+    version: null
+- current_identifier: null
+  type: marketplace
+  value:
+    marketplace_plugin_unique_identifier: sawyer-shi/tongyi_aigc:0.0.4@7c700f9387847af5812c9dec6a410a453aa4905671d86380323ef6e0639bc5bb
+    version: null
+kind: app
+version: 0.7.0
+workflow:
+  conversation_variables: []
+  environment_variables: []
+  features:
+    file_upload:
+      enabled: false
+    opening_statement: ''
+    retriever_resource:
+      enabled: true
+    sensitive_word_avoidance:
+      enabled: false
+    speech_to_text:
+      enabled: false
+    suggested_questions_after_answer:
+      enabled: false
+  graph:
+    edges:
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: trigger-schedule
+        targetType: tool
+      id: edge-trigger-google
+      source: schedule_trigger
+      sourceHandle: source
+      target: google_search
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: llm
+      id: edge-google-llm
+      source: google_search
+      sourceHandle: source
+      target: llm_process
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: llm
+        targetType: code
+      id: edge-llm-parse
+      source: llm_process
+      sourceHandle: source
+      target: code_parse
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: tool
+      id: edge-parse-img1
+      source: code_parse
+      sourceHandle: source
+      target: img_panel1
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: tool
+      id: edge-parse-img2
+      source: code_parse
+      sourceHandle: source
+      target: img_panel2
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: tool
+      id: edge-parse-img3
+      source: code_parse
+      sourceHandle: source
+      target: img_panel3
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: tool
+      id: edge-parse-img4
+      source: code_parse
+      sourceHandle: source
+      target: img_panel4
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: code
+      id: edge-img1-compose
+      source: img_panel1
+      sourceHandle: source
+      target: code_compose
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: code
+      id: edge-img2-compose
+      source: img_panel2
+      sourceHandle: source
+      target: code_compose
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: code
+      id: edge-img3-compose
+      source: img_panel3
+      sourceHandle: source
+      target: code_compose
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: tool
+        targetType: code
+      id: edge-img4-compose
+      source: img_panel4
+      sourceHandle: source
+      target: code_compose
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    - data:
+        isInIteration: false
+        isInLoop: false
+        sourceType: code
+        targetType: end
+      id: edge-compose-end
+      source: code_compose
+      sourceHandle: source
+      target: end_node
+      targetHandle: target
+      type: custom
+      zIndex: 0
+    nodes:
+    - data:
+        config:
+          frequency: daily
+          mode: visual
+          timezone: Asia/Shanghai
+          visual_config:
+            monthly_days:
+            - 1
+            on_minute: 0
+            time: 8:00 AM
+            weekdays:
+            - sun
+        cron_expression: ''
+        frequency: daily
+        mode: visual
+        selected: false
+        title: 定时触发器
+        type: trigger-schedule
+        visual_config:
+          monthly_days:
+          - 1
+          on_minute: 0
+          time: 8:00 AM
+          weekdays:
+          - sun
+      height: 128
+      id: schedule_trigger
+      position:
+        x: 80
+        y: 300
+      positionAbsolute:
+        x: 80
+        y: 300
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    - data:
+        desc: 搜索今日最新AI新闻
+        provider_id: langgenius/google/google
+        provider_name: langgenius/google/google
+        provider_type: builtin
+        plugin_id: langgenius/google
+        plugin_unique_identifier: langgenius/google:0.1.6@2888d7379ce1a7a3f71e29506417b4995418ac73d0bb3ede9b49ab10aa475944
+        provider_icon: ''
+        provider_show_name: Google
+        selected: false
+        title: 谷歌搜索-AI新闻
+        tool_configurations:
+          as_agent_tool:
+            type: constant
+            value: false
+        tool_description: 一个用于执行 Google SERP 搜索并提取片段和网页的工具。
+        tool_label: 谷歌搜索
+        tool_name: google_search
+        tool_node_version: '2'
+        tool_parameters:
+          query:
+            type: mixed
+            value: 'AI 人工智能 大模型 最新新闻 今天'
+          language_code:
+            type: mixed
+            value: zh
+          country_code:
+            type: mixed
+            value: cn
+        type: tool
+      height: 88
+      id: google_search
+      position:
+        x: 400
+        y: 300
+      positionAbsolute:
+        x: 400
+        y: 300
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    - data:
+        context:
+          enabled: false
+          variable_selector: []
+        desc: 筛选最重要的AI新闻，通俗解读，生成四宫格漫画脚本JSON
+        memory:
+          query_prompt_template: ''
+          role_prefix:
+            assistant: ''
+            user: ''
+          window:
+            enabled: false
+            size: 10
+        model:
+          completion_params:
+            temperature: 0.7
+          mode: chat
+          name: deepseek-v4-pro
+          provider: langgenius/deepseek/deepseek
+        prompt_template:
+        - id: system-prompt
+          role: system
+          text: |
+            你是一位AI新闻编辑和漫画编剧。你的任务是：
+            1. 从搜索结果中选出今天最重要的1条AI新闻
+            2. 用大白话解释这条新闻说了什么
+            3. 分析这条新闻对普通人有什么影响
+            4. 编写一个四宫格漫画脚本
+
+            ## 四宫格漫画要求
+            - 第1格：展示新闻场景/事件发生
+            - 第2格：解释发生了什么（大白话）
+            - 第3格：展示对普通人的影响
+            - 第4格：总结/展望/有趣的结尾
+
+            ## 画面风格（每格都必须遵循）
+            可爱的扁平卡通风格，简洁线条，明亮柔和的配色，白色背景。
+            主角是一个戴眼镜的圆脸卡通小人（代表普通读者），穿着蓝色T恤。
+            画面中绝对不能出现任何文字、字母、数字、符号或水印！
+
+            ## 输出格式（严格JSON，不要输出其他内容）
+            {
+              "title": "新闻标题（简短）",
+              "plain_summary": "大白话总结（50字以内）",
+              "impact": "对普通人的影响（50字以内）",
+              "style_prefix": "Cute flat cartoon style, clean simple lines, bright soft colors, white background, a round-faced cartoon character wearing glasses and blue T-shirt, no text no letters no words no watermark",
+              "panels": [
+                {
+                  "panel": 1,
+                  "image_prompt": "Cute flat cartoon style, clean simple lines, bright soft colors, white background, a round-faced cartoon character wearing glasses and blue T-shirt. [详细英文画面描述，不含任何文字]",
+                  "dialogue": "角色对话（中文，15字以内）",
+                  "narration": "旁白（中文，10字以内）"
+                },
+                {
+                  "panel": 2,
+                  "image_prompt": "Cute flat cartoon style, clean simple lines, bright soft colors, white background, a round-faced cartoon character wearing glasses and blue T-shirt. [详细英文画面描述，不含任何文字]",
+                  "dialogue": "角色对话（中文，15字以内）",
+                  "narration": "旁白（中文，10字以内）"
+                },
+                {
+                  "panel": 3,
+                  "image_prompt": "Cute flat cartoon style, clean simple lines, bright soft colors, white background, a round-faced cartoon character wearing glasses and blue T-shirt. [详细英文画面描述，不含任何文字]",
+                  "dialogue": "角色对话（中文，15字以内）",
+                  "narration": "旁白（中文，10字以内）"
+                },
+                {
+                  "panel": 4,
+                  "image_prompt": "Cute flat cartoon style, clean simple lines, bright soft colors, white background, a round-faced cartoon character wearing glasses and blue T-shirt. [详细英文画面描述，不含任何文字]",
+                  "dialogue": "角色对话（中文，15字以内）",
+                  "narration": "旁白（中文，10字以内）"
+                }
+              ]
+            }
+
+            注意：
+            - image_prompt必须用英文，描述画面中看到的内容，绝对不能包含文字
+            - dialogue和narration用中文，会在后期用代码叠加到图片上
+            - 4个panel的image_prompt都要以style_prefix开头
+            - 确保JSON格式正确，可以被json.loads解析
+            - 不要输出```json标记，直接输出JSON
+        - id: user-prompt
+          role: user
+          text: "以下是今天的AI新闻搜索结果，请根据这些内容完成任务：\n\n{{#google_search.text#}}"
+        selected: false
+        title: 新闻解读与漫画脚本
+        type: llm
+        vision:
+          enabled: false
+      height: 98
+      id: llm_process
+      position:
+        x: 720
+        y: 300
+      positionAbsolute:
+        x: 720
+        y: 300
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    - data:
+        code: |
+          import json
+          import re
+
+          def main(llm_output: str) -> dict:
+              # Extract JSON from markdown code block if present
+              json_match = re.search(r'```json\s*(.*?)\s*```', llm_output, re.DOTALL)
+              if json_match:
+                  json_str = json_match.group(1)
+              else:
+                  # Try to find JSON object directly
+                  json_match = re.search(r'\{.*\}', llm_output, re.DOTALL)
+                  if json_match:
+                      json_str = json_match.group(0)
+                  else:
+                      json_str = llm_output
+
+              data = json.loads(json_str)
+              panels = data.get('panels', [])
+
+              prompts = []
+              for i in range(4):
+                  if i < len(panels):
+                      prompts.append(panels[i].get('image_prompt', ''))
+                  else:
+                      prompts.append('')
+
+              return {
+                  "panel1_prompt": prompts[0],
+                  "panel2_prompt": prompts[1],
+                  "panel3_prompt": prompts[2],
+                  "panel4_prompt": prompts[3],
+                  "comic_data": json.dumps(data, ensure_ascii=False)
+              }
+        code_language: python3
+        outputs:
+          panel1_prompt:
+            children: null
+            type: string
+          panel2_prompt:
+            children: null
+            type: string
+          panel3_prompt:
+            children: null
+            type: string
+          panel4_prompt:
+            children: null
+            type: string
+          comic_data:
+            children: null
+            type: string
+        selected: false
+        title: 解析漫画脚本
+        type: code
+        variables:
+        - value_selector:
+          - llm_process
+          - text
+          variable: llm_output
+      height: 54
+      id: code_parse
+      position:
+        x: 1040
+        y: 300
+      positionAbsolute:
+        x: 1040
+        y: 300
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    - data:
+        desc: 生成第1格漫画图片
+        provider_id: sawyer-shi/tongyi_aigc/tongyi_aigc
+        provider_name: sawyer-shi/tongyi_aigc/tongyi_aigc
+        provider_type: builtin
+        plugin_id: sawyer-shi/tongyi_aigc
+        plugin_unique_identifier: sawyer-shi/tongyi_aigc:0.0.4@7c700f9387847af5812c9dec6a410a453aa4905671d86380323ef6e0639bc5bb
+        provider_icon: ''
+        provider_show_name: 通义AIGC
+        selected: false
+        title: 第1格图片
+        tool_configurations:
+          model:
+            type: constant
+            value: qwen-image-2.0-pro
+          n:
+            type: constant
+            value: 1
+          prompt_extend:
+            type: constant
+            value: false
+          seed:
+            type: constant
+            value: null
+          size:
+            type: constant
+            value: 1024*1024
+          watermark:
+            type: constant
+            value: false
+        tool_description: 使用通义Qwen模型根据文本描述生成图像
+        tool_label: Qwen-文生图
+        tool_name: qwen_text_2_image
+        tool_node_version: '2'
+        tool_parameters:
+          prompt:
+            type: mixed
+            value:
+            - code_parse
+            - panel1_prompt
+          negative_prompt:
+            type: mixed
+            value: "text, letters, words, characters, font, typography, writing, symbols, numbers, watermark, signature, blurry, low quality, distorted, deformed"
+        type: tool
+      height: 216
+      id: img_panel1
+      position:
+        x: 1360
+        y: 50
+      positionAbsolute:
+        x: 1360
+        y: 50
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    - data:
+        desc: 生成第2格漫画图片
+        provider_id: sawyer-shi/tongyi_aigc/tongyi_aigc
+        provider_name: sawyer-shi/tongyi_aigc/tongyi_aigc
+        provider_type: builtin
+        plugin_id: sawyer-shi/tongyi_aigc
+        plugin_unique_identifier: sawyer-shi/tongyi_aigc:0.0.4@7c700f9387847af5812c9dec6a410a453aa4905671d86380323ef6e0639bc5bb
+        provider_icon: ''
+        provider_show_name: 通义AIGC
+        selected: false
+        title: 第2格图片
+        tool_configurations:
+          model:
+            type: constant
+            value: qwen-image-2.0-pro
+          n:
+            type: constant
+            value: 1
+          prompt_extend:
+            type: constant
+            value: false
+          seed:
+            type: constant
+            value: null
+          size:
+            type: constant
+            value: 1024*1024
+          watermark:
+            type: constant
+            value: false
+        tool_description: 使用通义Qwen模型根据文本描述生成图像
+        tool_label: Qwen-文生图
+        tool_name: qwen_text_2_image
+        tool_node_version: '2'
+        tool_parameters:
+          prompt:
+            type: mixed
+            value:
+            - code_parse
+            - panel2_prompt
+          negative_prompt:
+            type: mixed
+            value: "text, letters, words, characters, font, typography, writing, symbols, numbers, watermark, signature, blurry, low quality, distorted, deformed"
+        type: tool
+      height: 216
+      id: img_panel2
+      position:
+        x: 1360
+        y: 250
+      positionAbsolute:
+        x: 1360
+        y: 250
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    - data:
+        desc: 生成第3格漫画图片
+        provider_id: sawyer-shi/tongyi_aigc/tongyi_aigc
+        provider_name: sawyer-shi/tongyi_aigc/tongyi_aigc
+        provider_type: builtin
+        plugin_id: sawyer-shi/tongyi_aigc
+        plugin_unique_identifier: sawyer-shi/tongyi_aigc:0.0.4@7c700f9387847af5812c9dec6a410a453aa4905671d86380323ef6e0639bc5bb
+        provider_icon: ''
+        provider_show_name: 通义AIGC
+        selected: false
+        title: 第3格图片
+        tool_configurations:
+          model:
+            type: constant
+            value: qwen-image-2.0-pro
+          n:
+            type: constant
+            value: 1
+          prompt_extend:
+            type: constant
+            value: false
+          seed:
+            type: constant
+            value: null
+          size:
+            type: constant
+            value: 1024*1024
+          watermark:
+            type: constant
+            value: false
+        tool_description: 使用通义Qwen模型根据文本描述生成图像
+        tool_label: Qwen-文生图
+        tool_name: qwen_text_2_image
+        tool_node_version: '2'
+        tool_parameters:
+          prompt:
+            type: mixed
+            value:
+            - code_parse
+            - panel3_prompt
+          negative_prompt:
+            type: mixed
+            value: "text, letters, words, characters, font, typography, writing, symbols, numbers, watermark, signature, blurry, low quality, distorted, deformed"
+        type: tool
+      height: 216
+      id: img_panel3
+      position:
+        x: 1360
+        y: 450
+      positionAbsolute:
+        x: 1360
+        y: 450
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    - data:
+        desc: 生成第4格漫画图片
+        provider_id: sawyer-shi/tongyi_aigc/tongyi_aigc
+        provider_name: sawyer-shi/tongyi_aigc/tongyi_aigc
+        provider_type: builtin
+        plugin_id: sawyer-shi/tongyi_aigc
+        plugin_unique_identifier: sawyer-shi/tongyi_aigc:0.0.4@7c700f9387847af5812c9dec6a410a453aa4905671d86380323ef6e0639bc5bb
+        provider_icon: ''
+        provider_show_name: 通义AIGC
+        selected: false
+        title: 第4格图片
+        tool_configurations:
+          model:
+            type: constant
+            value: qwen-image-2.0-pro
+          n:
+            type: constant
+            value: 1
+          prompt_extend:
+            type: constant
+            value: false
+          seed:
+            type: constant
+            value: null
+          size:
+            type: constant
+            value: 1024*1024
+          watermark:
+            type: constant
+            value: false
+        tool_description: 使用通义Qwen模型根据文本描述生成图像
+        tool_label: Qwen-文生图
+        tool_name: qwen_text_2_image
+        tool_node_version: '2'
+        tool_parameters:
+          prompt:
+            type: mixed
+            value:
+            - code_parse
+            - panel4_prompt
+          negative_prompt:
+            type: mixed
+            value: "text, letters, words, characters, font, typography, writing, symbols, numbers, watermark, signature, blurry, low quality, distorted, deformed"
+        type: tool
+      height: 216
+      id: img_panel4
+      position:
+        x: 1360
+        y: 650
+      positionAbsolute:
+        x: 1360
+        y: 650
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    - data:
+        code: |
+          import json
+          import re
+
+          def main(comic_data: str, img1: str, img2: str, img3: str, img4: str) -> dict:
+              data = json.loads(comic_data)
+              title = data.get('title', 'AI新闻')
+              summary = data.get('plain_summary', '')
+              impact = data.get('impact', '')
+              panels = data.get('panels', [])
+
+              # Extract image URLs from tool outputs
+              image_urls = []
+              for img_text in [img1, img2, img3, img4]:
+                  url = extract_url(img_text)
+                  image_urls.append(url)
+
+              dialogues = []
+              narrations = []
+              for i in range(4):
+                  if i < len(panels):
+                      dialogues.append(panels[i].get('dialogue', ''))
+                      narrations.append(panels[i].get('narration', ''))
+                  else:
+                      dialogues.append('')
+                      narrations.append('')
+
+              result_text = f"【{title}】\n📰 {summary}\n💡 {impact}\n"
+              for i in range(4):
+                  result_text += f"\n第{i+1}格：{dialogues[i]}"
+                  if narrations[i]:
+                      result_text += f"（{narrations[i]}）"
+
+              return {
+                  "result": result_text,
+                  "img1_url": image_urls[0] or '',
+                  "img2_url": image_urls[1] or '',
+                  "img3_url": image_urls[2] or '',
+                  "img4_url": image_urls[3] or '',
+                  "dialogues": json.dumps(dialogues, ensure_ascii=False),
+                  "narrations": json.dumps(narrations, ensure_ascii=False)
+              }
+
+          def extract_url(text: str) -> str:
+              if not text:
+                  return ''
+              url_match = re.search(r'https?://[^\s\)"\'>\]]+\.(?:png|jpg|jpeg|webp)', text, re.IGNORECASE)
+              if url_match:
+                  return url_match.group(0)
+              url_match = re.search(r'https?://[^\s\)"\'>\]]+', text)
+              if url_match:
+                  return url_match.group(0)
+              return ''
+        code_language: python3
+        outputs:
+          result:
+            children: null
+            type: string
+          img1_url:
+            children: null
+            type: string
+          img2_url:
+            children: null
+            type: string
+          img3_url:
+            children: null
+            type: string
+          img4_url:
+            children: null
+            type: string
+          dialogues:
+            children: null
+            type: string
+          narrations:
+            children: null
+            type: string
+        selected: false
+        title: 整理图片与文字
+        type: code
+        variables:
+        - value_selector:
+          - code_parse
+          - comic_data
+          variable: comic_data
+        - value_selector:
+          - img_panel1
+          - text
+          variable: img1
+        - value_selector:
+          - img_panel2
+          - text
+          variable: img2
+        - value_selector:
+          - img_panel3
+          - text
+          variable: img3
+        - value_selector:
+          - img_panel4
+          - text
+          variable: img4
+      height: 54
+      id: code_compose
+      position:
+        x: 1680
+        y: 300
+      positionAbsolute:
+        x: 1680
+        y: 300
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    - data:
+        desc: 输出新闻解读和四宫格漫画
+        outputs:
+        - value_selector:
+          - code_compose
+          - result
+          variable: result
+        selected: false
+        title: 结束
+        type: end
+      height: 90
+      id: end_node
+      position:
+        x: 2000
+        y: 300
+      positionAbsolute:
+        x: 2000
+        y: 300
+      sourcePosition: right
+      targetPosition: left
+      type: custom
+      width: 242
+      zIndex: 0
+    viewport:
+      x: 0
+      y: 0
+      zoom: 0.45
+  rag_pipeline_variables: []
