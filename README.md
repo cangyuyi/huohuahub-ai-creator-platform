@@ -15,7 +15,7 @@ HuohuaHub 不是几个独立工具的并列集合，而是一个独立平台。�
 
 ## 交互演示（静态示意图，非在线服务）
 
-[打开 Demo 源文件](./demo/index.html) · [查看完整实现](https://github.com/Alaraby527/huohuahub-ai-creator-platform)
+[打开 Demo 源文件](./demo/index.html) · [查看本仓库完整实现](https://github.com/cangyuyi/huohuahub-ai-creator-platform)
 
 Demo 演示「数据 → 画像 → 话术 → 写回」的中间产物链路，使用脱敏数据还原运营平台的核心交互。
 
