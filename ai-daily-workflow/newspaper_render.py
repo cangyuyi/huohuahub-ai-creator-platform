@@ -305,7 +305,8 @@ if __name__ == '__main__':
         "industry": '这标志着全球AI竞争格局正在从\u201c美国闭源领先\u201d向\u201c中美双轨并行\u201d演变，开源路线正在成为中国AI产业实现弯道超车的核心路径，AI主权和产业自主可控能力显著提升。',
     }
     
-    comic = r"D:\dify-ai-news-workflow\test_pure_cartoon.png"
-    out = r"D:\dify-ai-news-workflow\test_3col.png"
+    here = os.path.dirname(os.path.abspath(__file__))
+    comic = os.path.join(here, "test_pure_cartoon.png")
+    out = os.path.join(here, "test_3col.png")
     render_newspaper(result, comic, out)
     print(f"Saved: {out}, {os.path.getsize(out)//1024}KB")
