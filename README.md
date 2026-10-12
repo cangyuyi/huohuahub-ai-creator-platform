@@ -1,5 +1,7 @@
 # HuohuaHub（huohuahub.com）— AI 创作者平台建设
 
+> **证据范围（阅读前请区分）**：① 线上业务使用与历史运营数字来自个人项目记录，仓库不能独立复现，公开前应确认授权与统计口径；② 仓库提供部分 AI 日报代码、Dify DSL 和文档，其他云端应用配置/知识库/内部数据并不公开；③ `demo/index.html` 仅为脱敏的静态交互示意，不是在线服务或真实数据接入。
+
 ![Dify](https://img.shields.io/badge/Platform-Dify-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![RAG](https://img.shields.io/badge/Feature-RAG-purple)
